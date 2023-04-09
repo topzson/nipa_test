@@ -4,12 +4,8 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
-
-import Users from "./components/Users";
-
-import UserCreate from "./components/UserCreate";
-
-
+import Ticket from "./components/Ticket";
+import TicketCreate from "./components/TicketCreate";
 export default function App() {
 
  return (
@@ -21,10 +17,9 @@ export default function App() {
        <Navbar />
 
        <Routes>
+       <Route path="/" element={<Ticket />} />
+       <Route path="/create" element={<TicketCreate />} />
 
-         <Route path="/" element={<Users />} />
-
-         <Route path="/create" element={<UserCreate />} />
 
        </Routes>
 
