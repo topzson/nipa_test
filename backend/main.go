@@ -22,7 +22,7 @@ func main() {
 
 	r.POST("/users", controller.CreateUser)
 
-	r.PATCH("/users", controller.UpdateUser)
+	r.PATCH("/users/:id", controller.UpdateUser)
 
 	r.DELETE("/users/:id", controller.DeleteUser)
 
@@ -41,7 +41,7 @@ func CORSMiddleware() gin.HandlerFunc {
 
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
 
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT,PATCH,DELETE")
 
 		if c.Request.Method == "OPTIONS" {
 

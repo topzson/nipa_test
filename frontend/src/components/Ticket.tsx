@@ -9,194 +9,428 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
-import { TicketInterface } from "../models/ITicket";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditNoteIcon from '@mui/icons-material/EditNote';
 import Box from '@mui/material/Box';
-
+import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import TextField from "@mui/material/TextField";
+import FormControl from "@mui/material/FormControl";
+import Grid from "@mui/material/Grid";
+import Divider from "@mui/material/Divider";
 
+import Snackbar from "@mui/material/Snackbar";
+
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import { TicketInterface } from "../models/ITicket";
 import moment from 'moment';
 
 
- 
-function Users() {
 
- const [users, setUsers] = React.useState<TicketInterface[]>([]);
+function Ticket() {
+  const currentDate = new Date().toISOString();
+  const [users, setUsers] = React.useState<TicketInterface[]>([]);
+  const [usersbyid, setUsersid] = React.useState<Partial<TicketInterface>>({});
+  const [ticket, setTicket] = React.useState<Partial<TicketInterface>>({});
+  const handleInputChange = (
 
- 
+    event: React.ChangeEvent<{ id?: string; value: any }>
 
- const getUsers = async () => {
+) => {
 
-   const apiUrl = "http://localhost:8080/user";
+    const id = event.target.id as keyof typeof Ticket;
 
-   const requestOptions = {
+    const { value } = event.target;
 
-     method: "GET",
+    setUsersid({ ...usersbyid, [id]: value });
 
-     headers: { "Content-Type": "application/json" },
+};
+  function getUsersById(id: string) {
+    const apiUrl = `http://localhost:8080/user/${id}`;
+    const requestOptions = {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
 
-   };
+    };
 
- 
+    fetch(apiUrl, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        console.log("Data:");
+        console.log(res.data);
 
-   fetch(apiUrl, requestOptions)
-  .then((response) => response.json())
-  .then((res) => {
-    console.log("Data:");
-    console.log(res.data);
+        if (res.data) {
+          handleOpen()
+          setUsersid(res.data);
+        } else {
+          console.log("else");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+      });
+  };
 
-    if (res.data) {
-      setUsers(res.data);
-    } else {
-      console.log("else");
+  const getUsers = async () => {
+
+    const apiUrl = "http://localhost:8080/user";
+
+    const requestOptions = {
+
+      method: "GET",
+
+      headers: { "Content-Type": "application/json" },
+
+    };
+
+    fetch(apiUrl, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        console.log("Data:");
+        console.log(res.data);
+
+        if (res.data) {
+          setUsers(res.data);
+        } else {
+          console.log("else");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+      });
+  };
+  const [DeleteValue, setDeleteValue] = React.useState(false);
+  function Delete(DeleteTicketID: string) {
+
+    const apiUrl = `http://localhost:8080/users/${DeleteTicketID}`;
+    const requestOptions = {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    fetch(apiUrl, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        console.log("DeleteUser", res)
+      });
+    setDeleteValue(!DeleteValue);
+  }
+  // const [Ticket, setTicket] = React.useState<Partial<TicketInterface>>({});
+  async function updateTicket() {
+    let data = {
+      Title: usersbyid.Title ?? "",
+      Description: usersbyid.Description ?? "",
+      Contact_information: usersbyid.Contact_information ?? "",
+      Timestamp: currentDate,
+    };
+  
+    const apiUrl = `http://localhost:8080/users/${usersbyid.ID}`;
+    console.log(data);
+    const requestOptions = {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    };
+    try {
+      const response = await fetch(apiUrl, requestOptions);
+      const responseData = await response.json();
+      console.log("Update Ticket:", responseData);
+      // fetch the updated data after the update operation is successful
+    } catch (error) {
+      console.error("Error updating ticket:", error);
     }
-  })
-  .catch((error) => {
-    console.error("Error fetching users:", error);
-  });
- };
+  }
+  const [modalopen, setmodalOpen] = React.useState(false);
+  const handleOpen = () => setmodalOpen(true);
+  const handleClose = () => setmodalOpen(false);
+  const style = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+  useEffect(() => {
 
- 
+    getUsers();
 
- useEffect(() => {
+  }, [DeleteValue]);
 
-   getUsers();
 
- }, []);
 
- 
+  return (
 
- return (
+    <div>
 
-   <div>
+      <Container fixed>
 
-     <Container fixed>
+        <Button onClick={handleOpen}>Open modal</Button>
+        <Modal
+          open={modalopen}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Grid container spacing={3} >
 
-       <Box display="flex">
+              <Grid item xs={6}>
 
-         <Box flexGrow={1}>
+                <p>Title</p>
 
-           <Typography
+                <FormControl fullWidth variant="outlined">
 
-             component="h2"
+                  <TextField
 
-             variant="h6"
+                    id="Title"
 
-             color="primary"
+                    variant="outlined"
 
-             gutterBottom
+                    type="string"
 
-           >
+                    size="medium"
 
-             Tickets
+                    value={usersbyid.Title || ""}
 
-           </Typography>
+                    onChange={handleInputChange}
 
-         </Box>
+                  />
 
-         <Box>
+                </FormControl>
 
-           <Button
+              </Grid>
+              <Grid item xs={6}>
 
-             component={RouterLink}
+                <FormControl fullWidth variant="outlined">
 
-             to="/create"
+                  <p>Description</p>
 
-             variant="contained"
+                  <TextField
 
-             color="primary"
+                    id="Description"
 
-           >
+                    variant="outlined"
 
-             Create Ticket
+                    type="string"
 
-           </Button>
+                    size="medium"
 
-         </Box>
+                    value={usersbyid.Description || ""}
 
-       </Box>
+                    onChange={handleInputChange}
 
-       <TableContainer component={Paper} >
+                  />
 
-         <Table  aria-label="simple table">
+                </FormControl>
 
-           <TableHead>
+              </Grid>
 
-             <TableRow>
+              <Grid item xs={12}>
 
-               <TableCell align="center" width="5%">
+                <FormControl fullWidth variant="outlined">
 
-                 ID
+                  <p>Contact information</p>
 
-               </TableCell>
+                  <TextField
 
-               <TableCell align="center" width="25%">
+                    id="Contact_information"
 
-                 Title
+                    variant="outlined"
 
-               </TableCell>
+                    type="string"
 
-               <TableCell align="center" width="25%">
+                    size="medium"
 
-               Description
+                    value={usersbyid.Contact_information || ""}
 
-               </TableCell>
+                    onChange={handleInputChange}
 
-               <TableCell align="center" width="5%">
+                  />
 
-               Contact_information
+                </FormControl>
 
-               </TableCell>
+              </Grid>
 
-               <TableCell align="center" width="20%">
 
-               Timestamp
 
-               </TableCell>
 
-             </TableRow>
+              <Grid item xs={12}>
 
-           </TableHead>
+                <Button component={RouterLink} to="/" variant="contained" onClick={handleClose}>
 
-           <TableBody>
+                  Back
 
-             {users.map((user: TicketInterface) => (
+                </Button>
 
-               <TableRow key={user.ID}>
+                <Button
 
-                 <TableCell align="right">{user.ID}</TableCell>
+                  style={{ float: "right" }}
 
-                 <TableCell align="left" size="medium">
+                  onClick={updateTicket}
 
-                   {user.Title}
+                  variant="contained"
 
-                 </TableCell>
+                  color="primary"
 
-                 <TableCell align="left">{user.Description}</TableCell>
+                >
 
-                 <TableCell align="left">{user.Contact_information}</TableCell>
+                  Submit
 
-                 <TableCell align="center">{moment(user.Timestamp).format("DD/MM/YYYY")}</TableCell>
+                </Button>
 
-               </TableRow>
+              </Grid>
 
-             ))}
 
-           </TableBody>
 
-         </Table>
 
-       </TableContainer>
+            </Grid>
+          </Box>
+        </Modal>
 
-     </Container>
+        <Box display="flex">
 
-   </div>
+          <Box flexGrow={1}>
 
- );
+            <Typography
+
+              component="h2"
+
+              variant="h6"
+
+              color="primary"
+
+              gutterBottom
+
+            >
+
+              Tickets
+
+            </Typography>
+
+          </Box>
+
+          <Box>
+
+            <Button
+
+              component={RouterLink}
+
+              to="/create"
+
+              variant="contained"
+
+              color="primary"
+
+            >
+
+              Create Ticket
+
+            </Button>
+
+          </Box>
+
+        </Box>
+
+        <TableContainer component={Paper} >
+
+          <Table aria-label="simple table">
+
+            <TableHead>
+
+              <TableRow>
+
+                <TableCell align="center" width="5%">
+
+                  ID
+
+                </TableCell>
+
+                <TableCell align="center" width="25%">
+
+                  Title
+
+                </TableCell>
+
+                <TableCell align="center" width="25%">
+
+                  Description
+
+                </TableCell>
+
+                <TableCell align="center" width="5%">
+
+                  Contact_information
+
+                </TableCell>
+
+                <TableCell align="center" width="20%">
+
+                  Timestamp
+
+                </TableCell>
+                <TableCell align="center" width="20%">
+
+                  Action
+
+                </TableCell>
+
+              </TableRow>
+
+            </TableHead>
+
+            <TableBody>
+
+              {users.map((user: TicketInterface) => (
+
+                <TableRow key={user.ID}>
+
+                  <TableCell align="right">{user.ID}</TableCell>
+
+                  <TableCell align="left" size="medium">
+
+                    {user.Title}
+
+                  </TableCell>
+
+                  <TableCell align="left">{user.Description}</TableCell>
+
+                  <TableCell align="left">{user.Contact_information}</TableCell>
+
+                  <TableCell align="center">{moment(user.Timestamp).format("DD/MM/YYYY")}</TableCell>
+                  <TableCell align="center">
+                    <EditNoteIcon
+                      onClick={() => getUsersById(user.ID)}
+
+                    />&nbsp;<DeleteIcon
+                      onClick={() => Delete(user.ID)} />
+                  </TableCell>
+
+                </TableRow>
+
+              ))}
+
+            </TableBody>
+
+          </Table>
+
+        </TableContainer>
+
+      </Container>
+
+    </div>
+
+  );
 
 }
 
- 
 
-export default Users;
+
+export default Ticket;

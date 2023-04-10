@@ -93,7 +93,6 @@ func DeleteUser(c *gin.Context) {
 // PATCH /users
 
 func UpdateUser(c *gin.Context) {
-
 	var user entity.Ticket
 
 	if err := c.ShouldBindJSON(&user); err != nil {
@@ -104,7 +103,7 @@ func UpdateUser(c *gin.Context) {
 
 	}
 
-	if tx := entity.DB().Where("id = ?", user.ID).First(&user); tx.RowsAffected == 0 {
+	if tx := entity.DB().Where("id = ?", c.Param("id")).First(&user); tx.RowsAffected == 0 {
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": "user not found"})
 
@@ -113,11 +112,8 @@ func UpdateUser(c *gin.Context) {
 	}
 
 	if err := entity.DB().Save(&user).Error; err != nil {
-
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-
 		return
-
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": user})
