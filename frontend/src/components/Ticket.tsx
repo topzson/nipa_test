@@ -47,7 +47,7 @@ function Ticket() {
 
 };
   function getUsersById(id: string) {
-    const apiUrl = `http://localhost:8080/user/${id}`;
+    const apiUrl = `http://localhost:8080/tickets/${id}`;
     const requestOptions = {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -74,7 +74,7 @@ function Ticket() {
 
   const getUsers = async () => {
 
-    const apiUrl = "http://localhost:8080/user";
+    const apiUrl = "http://localhost:8080/tickets";
 
     const requestOptions = {
 
@@ -103,7 +103,7 @@ function Ticket() {
   const [DeleteValue, setDeleteValue] = React.useState(false);
   function Delete(DeleteTicketID: string) {
 
-    const apiUrl = `http://localhost:8080/users/${DeleteTicketID}`;
+    const apiUrl = `http://localhost:8080/ticket/${DeleteTicketID}`;
     const requestOptions = {
       method: "DELETE",
       headers: {
@@ -126,7 +126,7 @@ function Ticket() {
       Timestamp: currentDate,
     };
   
-    const apiUrl = `http://localhost:8080/users/${usersbyid.ID}`;
+    const apiUrl = `http://localhost:8080/ticket/${usersbyid.ID}`;
     console.log(data);
     const requestOptions = {
       method: "PATCH",

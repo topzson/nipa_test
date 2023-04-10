@@ -6,6 +6,8 @@ import (
 	"github.com/topzson/nipa_test/entity"
 
 	"github.com/gin-gonic/gin"
+
+	"github.com/topzson/nipa_test/middlewares"
 )
 
 func main() {
@@ -15,16 +17,24 @@ func main() {
 	r := gin.Default()
 	r.Use(CORSMiddleware())
 	// User Routes
+	api := r.Group("")
+	{
+		protected := api.Use(middlewares.Authorizes())
+		{
 
-	r.GET("/user", controller.ListUsers)
-
-	r.GET("/user/:id", controller.GetUser)
-
-	r.POST("/users", controller.CreateUser)
-
-	r.PATCH("/users/:id", controller.UpdateUser)
-
-	r.DELETE("/users/:id", controller.DeleteUser)
+			// ticket
+			protected.GET("/ticket", controller.ListTicket)
+			protected.GET("/ticket/:id", controller.GetTicket)
+			protected.POST("/tickets", controller.CreateTicket)
+			protected.DELETE("/ticket/:id", controller.DeleteTicket)
+			protected.PATCH("/tickets", controller.UpdateTicket)
+			// User
+			protected.GET("/users", controller.ListUser)
+			protected.GET("/user/:id", controller.GetUser)
+		}
+	}
+	// Authentication Routes
+	r.POST("/login", controller.Login)
 
 	// Run the server
 	r.Run()

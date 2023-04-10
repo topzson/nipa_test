@@ -8,9 +8,9 @@ import (
 	"net/http"
 )
 
-// POST /users
+// POST /Ticket
 
-func CreateUser(c *gin.Context) {
+func CreateTicket(c *gin.Context) {
 
 	var user entity.Ticket
 
@@ -34,9 +34,9 @@ func CreateUser(c *gin.Context) {
 
 }
 
-// GET /user/:id
+// GET /Ticket/:id
 
-func GetUser(c *gin.Context) {
+func GetTicket(c *gin.Context) {
 
 	var user entity.Ticket
 
@@ -54,9 +54,9 @@ func GetUser(c *gin.Context) {
 
 }
 
-// GET /users
+// GET /Ticket
 
-func ListUsers(c *gin.Context) {
+func ListTicket(c *gin.Context) {
 
 	var users []entity.Ticket
 
@@ -72,9 +72,9 @@ func ListUsers(c *gin.Context) {
 
 }
 
-// DELETE /users/:id
+// DELETE /Ticket/:id
 
-func DeleteUser(c *gin.Context) {
+func DeleteTicket(c *gin.Context) {
 
 	id := c.Param("id")
 
@@ -90,9 +90,9 @@ func DeleteUser(c *gin.Context) {
 
 }
 
-// PATCH /users
+// PATCH /Ticket
 
-func UpdateUser(c *gin.Context) {
+func UpdateTicket(c *gin.Context) {
 	var user entity.Ticket
 
 	if err := c.ShouldBindJSON(&user); err != nil {

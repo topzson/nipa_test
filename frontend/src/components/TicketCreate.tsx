@@ -95,7 +95,7 @@ function TicketCreate() {
         };
 
 
-        const apiUrl = "http://localhost:8080/users";
+        const apiUrl = "http://localhost:8080/ticket";
 
         const requestOptions = {
 

@@ -1,6 +1,7 @@
 package entity
 
 import (
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 
 	"gorm.io/driver/sqlite"
@@ -26,8 +27,15 @@ func SetupDatabase() {
 
 	// Migrate the schema
 
-	database.AutoMigrate(&Ticket{})
+	database.AutoMigrate(&User{}, &Ticket{})
 
 	db = database
 
+	password1, err := bcrypt.GenerateFromPassword([]byte("1234"), 14)
+	admin1 := User{
+		Name:     "กอเอ๋ย กอไก่",
+		Username: "admin",
+		Password: string(password1),
+	}
+	db.Model(&User{}).Create(&admin1)
 }
