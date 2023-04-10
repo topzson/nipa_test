@@ -1,35 +1,46 @@
-import React from "react";
 
+import React, {  useEffect } from 'react';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
-import Navbar from "./components/Navbar";
+import './App.css';
 import Home from "./components/index";
 import Ticket from "./components/Ticket";
-import TicketCreate from "./components/TicketCreate";
-export default function App() {
+import NavBar from './components/Navbar';
+import SignIn from "./components/Signin";
+import Create from "./components/TicketCreate";
 
- return (
+function App() {
+  const [token, setToken] = React.useState<string>("");
 
-   <Router>
+  useEffect(() => {
+    const getToken = localStorage.getItem("token");
+    if (getToken) {
+      setToken(getToken);
+    }
+  }, []);
+  console.log("Token", token)
+  if (!token) {
+    return <SignIn />
+  }
 
-     <div>
-
-       <Navbar />
-
-       <Routes>
-       <Route path="/" element={<Home />} />
-       <Route path="/ticket" element={<Ticket />} />
-
-       <Route path="/create" element={<TicketCreate />} />
+  return (
+    <BrowserRouter>
+      <>
+        <div>
 
 
-       </Routes>
+          <NavBar />
+          <Routes>
 
-     </div>
+            <Route path="/" element={<Ticket />} />
+            {/* <Route path="/ticket" element={<Ticket />} /> */}
+            <Route path="/create" element={<Create />} />
+          </Routes>
 
-   </Router>
-
- );
-
+        </div>
+      </>
+    </BrowserRouter>
+  );
 }
+
+export default App;

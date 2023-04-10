@@ -47,10 +47,12 @@ function Ticket() {
 
 };
   function getUsersById(id: string) {
-    const apiUrl = `http://localhost:8080/tickets/${id}`;
+    const apiUrl = `http://localhost:8080/ticket/${id}`;
     const requestOptions = {
       method: "GET",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json" },
 
     };
 
@@ -74,13 +76,15 @@ function Ticket() {
 
   const getUsers = async () => {
 
-    const apiUrl = "http://localhost:8080/tickets";
+    const apiUrl = "http://localhost:8080/ticket";
 
     const requestOptions = {
 
       method: "GET",
 
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json" },
 
     };
 
@@ -107,6 +111,7 @@ function Ticket() {
     const requestOptions = {
       method: "DELETE",
       headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
         "Content-Type": "application/json",
       },
     };
@@ -126,11 +131,12 @@ function Ticket() {
       Timestamp: currentDate,
     };
   
-    const apiUrl = `http://localhost:8080/ticket/${usersbyid.ID}`;
+    const apiUrl = `http://localhost:8080/tickets/${usersbyid.ID}`;
     console.log(data);
     const requestOptions = {
       method: "PATCH",
       headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
@@ -172,7 +178,7 @@ function Ticket() {
 
       <Container fixed>
 
-        <Button onClick={handleOpen}>Open modal</Button>
+        <br/>
         <Modal
           open={modalopen}
           onClose={handleClose}

@@ -1,13 +1,18 @@
+import { UserInterface } from "./IUser";
+
 export interface TicketInterface {
 
     ID: string,
    
-    Title: string;
+    Title: string,
    
-    Description: string;
+    Description: string,
    
-    Contact_information: string;
+    Contact_information: string,
 
-    Timestamp: Date | null;
+    Timestamp: string,
+
+    UserID : number,
+    User: UserInterface
    
    }

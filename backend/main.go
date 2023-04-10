@@ -7,7 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/topzson/nipa_test/middlewares"
+	middlewares "github.com/topzson/nipa_test/middlewares"
 )
 
 func main() {
@@ -27,7 +27,7 @@ func main() {
 			protected.GET("/ticket/:id", controller.GetTicket)
 			protected.POST("/tickets", controller.CreateTicket)
 			protected.DELETE("/ticket/:id", controller.DeleteTicket)
-			protected.PATCH("/tickets", controller.UpdateTicket)
+			protected.PATCH("/tickets/:id", controller.UpdateTicket)
 			// User
 			protected.GET("/users", controller.ListUser)
 			protected.GET("/user/:id", controller.GetUser)

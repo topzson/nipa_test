@@ -49,7 +49,7 @@ function TicketCreate() {
 
     const [error, setError] = React.useState(false);
 
-    const currentDate = new Date();
+    const currentDate = new Date().toISOString();
     const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
             return;
@@ -95,13 +95,15 @@ function TicketCreate() {
         };
 
 
-        const apiUrl = "http://localhost:8080/ticket";
+        const apiUrl = "http://localhost:8080/tickets";
 
         const requestOptions = {
 
             method: "POST",
 
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json" },
 
             body: JSON.stringify(data),
 
